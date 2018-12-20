@@ -1,6 +1,55 @@
 const moment = require('moment');
 
-var theseBooks =
+class App {
+  constructor() {}
+
+  pickLength(type) {
+    var titleLength = "==============================".length
+    var authorLength = "=====================".length
+    var usedLength
+    switch(type) {
+      case "author":
+        usedLength = authorLength
+        break;
+      case "title":
+        usedLength = titleLength
+        break;
+    }
+    return usedLength
+  }
+
+  displayTable(books) {
+    let result = "";
+
+    result += "| Pub Date     |                          Title | Authors               |\n";
+    result += "|=======================================================================|\n";
+    books.forEach((book) => {
+      let authors = this.truncate(book.Authors, "author")
+      let title = this.truncate(book.Title, "title")
+      result += `\r| ${moment(book.Publication_Date, "DD/MM/YYYY").format("DD MMM YYYY ")} | ${title} | ${authors} |\n`;
+    });
+    return result;
+  }
+
+  truncate(myString, type) {
+    let usedLength = this.pickLength(type)
+    if (myString.length > usedLength) {
+      var myTruncatedString = myString.substring(0,(usedLength - 4));
+      myTruncatedString = myTruncatedString + " ..."
+      return myTruncatedString
+    } else {
+      let spaces = usedLength - myString.length
+      for(var i = 0; i < spaces; i++){
+        myString = " " + myString
+      }
+      return myString
+    }
+  }
+}
+
+module.exports = App;
+
+let theseBooks =
 [
   {
     "Publication_Date": "29/07/1954",
@@ -18,47 +67,5 @@ var theseBooks =
     "Authors": "Joanne Rowling"
   }
 ]
-
-  function pickLength(type) {
-    var titleLength = "==============================".length
-    var authorLength = "=====================".length
-    var usedLength
-    switch(type) {
-      case "author":
-        usedLength = authorLength
-        break;
-      case "title":
-        usedLength = titleLength
-        break;
-    }
-    return usedLength
-  }
-
-  function displayTable(books) {
-    console.log("| Pub Date     |                          Title | Authors               |")
-    console.log("|=======================================================================|")
-    books.forEach(function(book) {
-      let authors = truncate(book.Authors, "author")
-      let title = truncate(book.Title, "title")
-      console.log(`\r| ${moment(book.Publication_Date, "DD/MM/YYYY").format("DD MMM YYYY ")} | ${title} | ${authors} |`)
-    });
-  }
-
-  function truncate(myString, type) {
-    usedLength = pickLength(type)
-    if (myString.length > usedLength) {
-      var myTruncatedString = myString.substring(0,(usedLength - 4));
-      myTruncatedString = myTruncatedString + " ..."
-      return myTruncatedString
-    } else {
-      let spaces = usedLength - myString.length
-      for(var i = 0; i < spaces; i++){
-        myString = " " + myString
-      }
-      return myString
-    }
-  }
-
-
-// displayTable(theseBooks)
-exports.displayTable = displayTable();
+let app = new App();
+console.log(app.displayTable(theseBooks));

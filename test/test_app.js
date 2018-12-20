@@ -1,21 +1,23 @@
 var {expect} = require('chai');
-var {app} = require('../src/app.js');
+var App = require('../src/app.js');
 
 describe("Table app", function() {
+  it("Output is formatted", function() {
+    // Arrange
+    var input = [
+      {
+        "Publication_Date": "29/08/1955",
+        "Title": "Not Lord of the Rings, something completely different",
+        "Authors": "Nobody knew what JR stood for"
+      }
+    ]  
+    let expected = "| Pub Date     |                          Title | Authors               |\n|=======================================================================|\n\r| 29 Aug 1955  | Not Lord of the Rings, som ... | Nobody knew what  ... |\n";
+    let app = new App();
 
-  var input = [
-    {
-      "Publication_Date": "29/08/1955",
-      "Title": "Not Lord of the Rings, something completely different",
-      "Authors": "Nobody knew what JR stood for"
-    }
-  ]
+    // Act
+    let actual = app.displayTable(input);
 
-
-  it("The length of the title is 30", function() {
-    console.log(input[0])
-    app.displayTable(input[0]);
-    expect(title.length).to.equal(30);
+    // Assert
+    expect(actual).to.equal(expected);
   });
-
 })
